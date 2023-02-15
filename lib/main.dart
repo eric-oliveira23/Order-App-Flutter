@@ -1,8 +1,11 @@
 import 'package:app_pedidos/styles/mytheme.dart';
 import 'package:app_pedidos/views/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 
-void main() {
+Future<void> main() async {
+  await Hive.initFlutter();
+
   runApp(const MyApp());
   // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
   //     overlays: [SystemUiOverlay.bottom]);

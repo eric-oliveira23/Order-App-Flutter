@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:hive/hive.dart';
+
+// part 'pedido.g.dart';
 
 List<Pedido> pedidoFromJson(String str) =>
     List<Pedido>.from(json.decode(str).map((x) => Pedido.fromJson(x)));
@@ -6,21 +9,22 @@ List<Pedido> pedidoFromJson(String str) =>
 String welcomeToJson(List<Pedido> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
+@HiveType(typeId: 0)
 class Pedido {
   Pedido({
-    required this.id,
-    required this.numero,
-    required this.dataCriacao,
-    required this.dataAlteracao,
-    required this.status,
-    required this.desconto,
-    required this.frete,
-    required this.subTotal,
-    required this.valorTotal,
-    required this.cliente,
-    required this.enderecoEntrega,
-    required this.itens,
-    required this.pagamento,
+    @HiveField(0) required this.id,
+    @HiveField(1) required this.numero,
+    @HiveField(2) required this.dataCriacao,
+    @HiveField(3) required this.dataAlteracao,
+    @HiveField(4) required this.status,
+    @HiveField(5) required this.desconto,
+    @HiveField(6) required this.frete,
+    @HiveField(7) required this.subTotal,
+    @HiveField(8) required this.valorTotal,
+    @HiveField(9) required this.cliente,
+    @HiveField(10) required this.enderecoEntrega,
+    @HiveField(11) required this.itens,
+    @HiveField(12) required this.pagamento,
   });
 
   String id;

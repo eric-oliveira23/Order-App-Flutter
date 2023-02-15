@@ -1,6 +1,7 @@
 import 'package:app_pedidos/components/order_list.dart';
+import 'package:app_pedidos/components/separator.dart';
 import 'package:flutter/material.dart';
-
+import 'package:lottie/lottie.dart';
 import '../models/pedido.dart';
 import '../services/remote_service.dart';
 
@@ -14,12 +15,32 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   bool isLoaded = false;
   List<Pedido>? pedidos = [];
-  List<Pedido>? results = [];
+  List<Pedido>? _pedidosEncontrados = [];
 
   @override
   void initState() {
     getData();
+    _pedidosEncontrados = pedidos;
     super.initState();
+  }
+
+  // Função chamada caso ocorra qualquer mudança no textfield
+  void _runFilter(String enteredKeyword) {
+    List<Pedido>? result = [];
+    if (enteredKeyword.isEmpty) {
+      // se o campo de pesquisa estiver vazio, mostrará todos os usuários
+      result = pedidos;
+    } else {
+      result = pedidos
+          ?.where((pedido) => pedido.cliente.nome
+              .toLowerCase()
+              .contains(enteredKeyword.toLowerCase()))
+          .toList();
+    }
+
+    setState(() {
+      _pedidosEncontrados = result;
+    });
   }
 
   getData() async {
@@ -31,52 +52,57 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  // This function is called whenever the text field changes
-  void _runFilter(String enteredKeyword) {
-    if (enteredKeyword.isEmpty) {
-      // if the search field is empty or only contains white-space, we'll display all users
-      results = pedidos;
-    } else {
-      results = pedidos!
-          .where((pedido) => pedido.cliente.nome
-              .toLowerCase()
-              .contains(enteredKeyword.toLowerCase()))
-          .toList();
-      // we use the toLowerCase() method to make it case-insensitive
-    }
-
-    // Refresh the UI
-    setState(() {
-      pedidos = results;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(
-          top: 40,
-          left: 12,
-          right: 12,
-        ),
-        child: Column(
-          children: [
-            TextField(
-              onChanged: (value) => _runFilter(value),
+      resizeToAvoidBottomInset: false,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 40,
+              left: 12,
+              right: 12,
+            ),
+            child: TextField(
+              onChanged: (value) => {_runFilter(value)},
               decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+                labelText: 'Insira o nome',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(15),
+                  ),
+                ),
                 prefixIcon: Icon(Icons.search),
               ),
             ),
-            Expanded(
-              child: OrderList(
-                isLoaded: isLoaded,
-                pedidos: pedidos,
-              ),
-            )
-          ],
-        ),
+          ),
+          _pedidosEncontrados!.isNotEmpty
+              ? Expanded(
+                  child: OrderList(
+                    isLoaded: isLoaded,
+                    pedidos: _pedidosEncontrados,
+                  ),
+                )
+              : Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Nada encontrado.",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      const SeparatorMain(),
+                      Lottie.asset(
+                        'assets/lottie/empty.json',
+                        height: 180,
+                        width: 180,
+                      ),
+                    ],
+                  ),
+                ),
+        ],
       ),
     );
   }

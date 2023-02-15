@@ -30,6 +30,16 @@ class DetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(pedido.cliente.nome),
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.chevron_left_sharp,
+            size: 25,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          tooltip: 'Voltar',
+        ),
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),

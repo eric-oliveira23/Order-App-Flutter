@@ -1,6 +1,5 @@
 import 'package:app_pedidos/models/pedido.dart';
 import 'package:app_pedidos/services/remote_service.dart';
-import 'package:app_pedidos/views/details.dart';
 import 'package:flutter/material.dart';
 
 import '../components/order_list.dart';
