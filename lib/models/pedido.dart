@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final welcome = welcomeFromJson(jsonString);
-
 import 'dart:convert';
 
 List<Pedido> pedidoFromJson(String str) =>
@@ -133,8 +129,8 @@ class EnderecoEntrega {
   String numero;
   String cep;
   String bairro;
-  Cidade cidade;
-  Estado estado;
+  String cidade;
+  String estado;
   String complemento;
   String referencia;
 
@@ -145,8 +141,8 @@ class EnderecoEntrega {
         numero: json["numero"],
         cep: json["cep"],
         bairro: json["bairro"],
-        cidade: cidadeValues.map[json["cidade"]]!,
-        estado: estadoValues.map[json["estado"]]!,
+        cidade: json["cidade"],
+        estado: json["estado"],
         complemento: json["complemento"],
         referencia: json["referencia"],
       );
@@ -221,23 +217,23 @@ class Pagamento {
   String id;
   int parcela;
   double valor;
-  Codigo codigo;
-  Nome nome;
+  String codigo;
+  String nome;
 
   factory Pagamento.fromJson(Map<String, dynamic> json) => Pagamento(
         id: json["id"],
         parcela: json["parcela"],
         valor: json["valor"]?.toDouble(),
-        codigo: codigoValues.map[json["codigo"]]!,
-        nome: nomeValues.map[json["nome"]]!,
+        codigo: json["codigo"]!,
+        nome: json["nome"]!,
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "parcela": parcela,
         "valor": valor,
-        "codigo": codigoValues.reverse[codigo],
-        "nome": nomeValues.reverse[nome],
+        "codigo": codigo,
+        "nome": nome,
       };
 }
 

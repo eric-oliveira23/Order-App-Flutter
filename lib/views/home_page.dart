@@ -1,6 +1,8 @@
-import 'package:app_pedidos/models/pedido.dart';
-import 'package:app_pedidos/services/remote_service.dart';
+import 'package:app_pedidos/views/main_list.dart';
+import 'package:app_pedidos/views/search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,41 +12,49 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Pedido>? pedidos = [];
-  var isLoaded = false;
+  int _selectedIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    getData();
-  }
-
-  getData() async {
-    pedidos = await RemoteService().getPedidos();
-    if (pedidos != null) {
-      setState(() {
-        isLoaded = true;
-      });
-    }
-  }
+  final List<Widget> _pages = [
+    const MainList(),
+    const SearchPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Visibility(
-      visible: isLoaded,
-      replacement: const Center(
-        child: CircularProgressIndicator(),
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: Container(
+        color: Colors.transparent,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+          child: GNav(
+            backgroundColor: Colors.transparent,
+            color: Colors.white,
+            activeColor: Colors.white,
+            tabBackgroundColor: Colors.grey.shade800,
+            gap: 8,
+            onTabChange: (value) {
+              setState(() {
+                _selectedIndex = value;
+              });
+            },
+            padding: const EdgeInsets.all(10),
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            tabs: const [
+              GButton(
+                text: 'Pedidos',
+                textStyle: TextStyle(fontWeight: FontWeight.normal),
+                icon: (Icons.list),
+              ),
+              //
+              GButton(
+                text: 'Pesquisar',
+                icon: (Icons.search),
+              ),
+            ],
+          ),
+        ),
       ),
-      child: ListView.builder(
-        itemCount: pedidos?.length,
-        physics: const BouncingScrollPhysics(),
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(pedidos![index].numero.toString()),
-          );
-        },
-      ),
-    ));
+    );
   }
 }
