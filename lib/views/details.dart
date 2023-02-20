@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import '../components/detail_label.dart';
 import '../components/sections_label.dart';
 import '../components/separator.dart';
-import '../models/pedido.dart';
 
 class DetailsPage extends StatelessWidget {
   final Map<String, dynamic> pedido;
@@ -157,7 +156,7 @@ class DetailsPage extends StatelessWidget {
                     ),
                   ),
                   subtitle: Text(
-                    '${pedido['itens'][index]['quantidade']}',
+                    '${pedido['itens'][index]['quantidade']}x',
                     style: const TextStyle(fontSize: 16),
                   ),
                   trailing:

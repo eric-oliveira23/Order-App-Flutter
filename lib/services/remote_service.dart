@@ -10,7 +10,7 @@ class ApiService {
     final url =
         Uri.parse('https://desafiotecnicosti3.azurewebsites.net/pedido');
 
-    File file = File(directory.path + "/" + dataCache);
+    File file = File("${directory.path}/$dataCache");
 
     if (file.existsSync()) {
       print("Reading from phone cache");

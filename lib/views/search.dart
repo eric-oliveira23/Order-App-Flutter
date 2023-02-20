@@ -1,9 +1,8 @@
-import 'package:app_pedidos/components/order_list.dart';
 import 'package:app_pedidos/components/separator.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import '../models/pedido.dart';
 import '../services/remote_service.dart';
+import 'details.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -13,33 +12,11 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  bool isLoaded = false;
-  var pedidos = ApiService.getUsers();
-  var _pedidosEncontrados = [];
+  String searchString = '';
 
   @override
   void initState() {
-    // _pedidosEncontrados = pedidos;
     super.initState();
-  }
-
-  // Função chamada caso ocorra qualquer mudança no textfield
-  void _runFilter(String enteredKeyword) {
-    var result = [];
-    if (enteredKeyword.isEmpty) {
-      // se o campo de pesquisa estiver vazio, mostrará todos os usuários
-      result = pedidos;
-    } else {
-      result = pedidos
-          ?.where((pedido) => pedido['cliente']['nome']
-              .toLowerCase()
-              .contains(enteredKeyword.toLowerCase()))
-          .toList();
-    }
-
-    setState(() {
-      _pedidosEncontrados = result;
-    });
   }
 
   @override
@@ -55,7 +32,11 @@ class _SearchPageState extends State<SearchPage> {
               right: 12,
             ),
             child: TextField(
-              onChanged: (value) => {_runFilter(value)},
+              onChanged: (value) => {
+                setState(() {
+                  searchString = value;
+                })
+              },
               decoration: const InputDecoration(
                 labelText: 'Insira o nome',
                 border: OutlineInputBorder(
@@ -67,31 +48,53 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
           ),
-          _pedidosEncontrados.isNotEmpty
-              ? Expanded(
-                  child: OrderList(
-                    isLoaded: isLoaded,
-                    // pedidos: _pedidosEncontrados,
-                  ),
-                )
-              : Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Nada encontrado.",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      const SeparatorMain(),
-                      Lottie.asset(
-                        'assets/lottie/empty.json',
-                        height: 180,
-                        width: 180,
-                      ),
-                    ],
-                  ),
-                ),
+          Expanded(
+            child: FutureBuilder<dynamic>(
+                future: ApiService.getUsers(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          var pedido = snapshot.data![index];
+                          String pedidoNome = pedido['cliente']['nome'];
+                          return pedidoNome
+                                  .toLowerCase()
+                                  .contains(searchString.toLowerCase())
+                              ? ListTile(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DetailsPage(pedido: pedido),
+                                        ));
+                                  },
+                                  leading: CircleAvatar(
+                                    child: Text(
+                                      pedido['numero'].toString(),
+                                    ),
+                                  ),
+                                  title: Text(
+                                    pedido['cliente']['nome'],
+                                  ),
+                                  subtitle: Text(
+                                    pedido['enderecoEntrega']['endereco'],
+                                  ),
+                                )
+                              : const SizedBox();
+                        });
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('$snapshot.error'),
+                    );
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }),
+          )
         ],
       ),
     );

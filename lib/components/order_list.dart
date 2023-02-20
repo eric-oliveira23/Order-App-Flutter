@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import '../models/pedido.dart';
 import '../services/remote_service.dart';
 import '../views/details.dart';
 
 class OrderList extends StatelessWidget {
-  OrderList({
+  const OrderList({
     super.key,
     required this.isLoaded,
   });
