@@ -1,15 +1,9 @@
 import 'package:app_pedidos/styles/mytheme.dart';
 import 'package:app_pedidos/views/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
 
 Future<void> main() async {
-  await Hive.initFlutter();
-
   runApp(const MyApp());
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
-  //     overlays: [SystemUiOverlay.bottom]);
-  // esconde a status e a actionbar
 }
 
 class MyApp extends StatefulWidget {
@@ -20,7 +14,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

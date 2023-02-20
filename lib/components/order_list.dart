@@ -1,48 +1,63 @@
 import 'package:flutter/material.dart';
 import '../models/pedido.dart';
+import '../services/remote_service.dart';
 import '../views/details.dart';
 
 class OrderList extends StatelessWidget {
-  const OrderList({
+  OrderList({
     super.key,
     required this.isLoaded,
-    required this.pedidos,
   });
 
   final bool isLoaded;
-  final List<Pedido>? pedidos;
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: isLoaded,
-      replacement: const Center(
-        child: CircularProgressIndicator(),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Usuários"),
+        centerTitle: true,
       ),
-      child: ListView.builder(
-        itemCount: pedidos?.length,
-        physics: const BouncingScrollPhysics(),
-        itemBuilder: (context, index) {
-          return ListTile(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailsPage(pedido: pedidos![index]),
-                ),
+      body: FutureBuilder<dynamic>(
+          future: ApiService.getUsers(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  var pedido = snapshot.data![index];
+                  return ListTile(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailsPage(pedido: pedido),
+                          ));
+                    },
+                    leading: CircleAvatar(
+                      child: Text(
+                        pedido['numero'].toString(),
+                      ),
+                    ),
+                    title: Text(
+                      pedido['cliente']['nome'],
+                    ),
+                    subtitle: Text(
+                      pedido['enderecoEntrega']['endereco'],
+                    ),
+                  );
+                },
               );
-            },
-            leading: CircleAvatar(
-              child: Text(
-                pedidos![index].numero.toString(),
-              ),
-            ),
-            title: Text(pedidos![index].cliente.nome),
-            subtitle: Text(pedidos![index].status),
-            trailing: Text('R\$ ${pedidos![index].valorTotal}'),
-          );
-        },
-      ),
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('$snapshot.error'),
+              );
+            }
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }),
     );
   }
 }

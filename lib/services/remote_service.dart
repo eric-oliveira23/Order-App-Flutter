@@ -1,17 +1,39 @@
-import '../models/pedido.dart';
+import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
-class RemoteService {
-  Future<List<Pedido>?> getPedidos() async {
-    var client = http.Client();
+class ApiService {
+  static getUsers() async {
+    String dataCache = "pathString.json";
+    var directory = await getTemporaryDirectory();
+    final url =
+        Uri.parse('https://desafiotecnicosti3.azurewebsites.net/pedido');
 
-    var uri = Uri.parse('https://desafiotecnicosti3.azurewebsites.net/pedido');
-    var response = await client.get(uri);
+    File file = File(directory.path + "/" + dataCache);
 
-    if (response.statusCode == 200) {
-      var json = response.body;
-      return pedidoFromJson(json);
+    if (file.existsSync()) {
+      print("Reading from phone cache");
+
+      //Lê os dados por cache
+      final data = file.readAsStringSync();
+      final List res = await json.decode(data);
+
+      return res;
+    } else {
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final body = response.body;
+
+        //salvar json pro cache
+        file.writeAsStringSync(body, flush: true, mode: FileMode.write);
+        final List res = await jsonDecode(response.body);
+        return res;
+      } else {
+        List json = await jsonDecode(response.body);
+        return json;
+      }
     }
-    return null;
   }
 }

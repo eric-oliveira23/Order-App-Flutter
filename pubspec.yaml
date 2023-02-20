@@ -39,8 +39,9 @@ dependencies:
   intl: ^0.18.0
   google_nav_bar: ^5.0.6
   lottie: ^2.2.0
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
+  path_provider: ^2.0.12
+  
+
  
   
 
@@ -54,14 +55,15 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-  floor_generator: ^1.4.1
-  build_runner: ^2.3.3
-  hive_generator: ^2.0.0
+
 
  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+objectbox:
+  output_dir: database
 
 # The following section is specific to Flutter packages.
 flutter:

@@ -1,36 +1,19 @@
 import 'dart:convert';
-import 'package:hive/hive.dart';
 
 // part 'pedido.g.dart';
 
 List<Pedido> pedidoFromJson(String str) =>
     List<Pedido>.from(json.decode(str).map((x) => Pedido.fromJson(x)));
 
-String welcomeToJson(List<Pedido> data) =>
+String encodeToJson(List<Pedido> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-@HiveType(typeId: 0)
 class Pedido {
-  Pedido({
-    @HiveField(0) required this.id,
-    @HiveField(1) required this.numero,
-    @HiveField(2) required this.dataCriacao,
-    @HiveField(3) required this.dataAlteracao,
-    @HiveField(4) required this.status,
-    @HiveField(5) required this.desconto,
-    @HiveField(6) required this.frete,
-    @HiveField(7) required this.subTotal,
-    @HiveField(8) required this.valorTotal,
-    @HiveField(9) required this.cliente,
-    @HiveField(10) required this.enderecoEntrega,
-    @HiveField(11) required this.itens,
-    @HiveField(12) required this.pagamento,
-  });
-
   String id;
+
   int numero;
-  DateTime dataCriacao;
-  DateTime dataAlteracao;
+  String dataCriacao;
+  String dataAlteracao;
   String status;
   double desconto;
   double frete;
@@ -41,11 +24,27 @@ class Pedido {
   List<Item> itens;
   List<Pagamento> pagamento;
 
+  Pedido({
+    required this.id,
+    required this.numero,
+    required this.dataCriacao,
+    required this.dataAlteracao,
+    required this.status,
+    required this.desconto,
+    required this.frete,
+    required this.subTotal,
+    required this.valorTotal,
+    required this.cliente,
+    required this.enderecoEntrega,
+    required this.itens,
+    required this.pagamento,
+  });
+
   factory Pedido.fromJson(Map<String, dynamic> json) => Pedido(
         id: json["id"],
         numero: json["numero"],
-        dataCriacao: DateTime.parse(json["dataCriacao"]),
-        dataAlteracao: DateTime.parse(json["dataAlteracao"]),
+        dataCriacao: json["dataCriacao"],
+        dataAlteracao: json["dataAlteracao"],
         status: json["status"]!,
         desconto: json["desconto"]?.toDouble(),
         frete: json["frete"]?.toDouble(),
@@ -61,8 +60,8 @@ class Pedido {
   Map<String, dynamic> toJson() => {
         "id": id,
         "numero": numero,
-        "dataCriacao": dataCriacao.toIso8601String(),
-        "dataAlteracao": dataAlteracao.toIso8601String(),
+        "dataCriacao": dataCriacao,
+        "dataAlteracao": dataAlteracao,
         "status": statusValues.reverse[status],
         "desconto": desconto,
         "frete": frete,

@@ -14,25 +14,24 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   bool isLoaded = false;
-  List<Pedido>? pedidos = [];
-  List<Pedido>? _pedidosEncontrados = [];
+  var pedidos = ApiService.getUsers();
+  var _pedidosEncontrados = [];
 
   @override
   void initState() {
-    getData();
-    _pedidosEncontrados = pedidos;
+    // _pedidosEncontrados = pedidos;
     super.initState();
   }
 
   // Função chamada caso ocorra qualquer mudança no textfield
   void _runFilter(String enteredKeyword) {
-    List<Pedido>? result = [];
+    var result = [];
     if (enteredKeyword.isEmpty) {
       // se o campo de pesquisa estiver vazio, mostrará todos os usuários
       result = pedidos;
     } else {
       result = pedidos
-          ?.where((pedido) => pedido.cliente.nome
+          ?.where((pedido) => pedido['cliente']['nome']
               .toLowerCase()
               .contains(enteredKeyword.toLowerCase()))
           .toList();
@@ -41,15 +40,6 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {
       _pedidosEncontrados = result;
     });
-  }
-
-  getData() async {
-    pedidos = await RemoteService().getPedidos();
-    if (pedidos != null) {
-      setState(() {
-        isLoaded = true;
-      });
-    }
   }
 
   @override
@@ -77,11 +67,11 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
           ),
-          _pedidosEncontrados!.isNotEmpty
+          _pedidosEncontrados.isNotEmpty
               ? Expanded(
                   child: OrderList(
                     isLoaded: isLoaded,
-                    pedidos: _pedidosEncontrados,
+                    // pedidos: _pedidosEncontrados,
                   ),
                 )
               : Expanded(

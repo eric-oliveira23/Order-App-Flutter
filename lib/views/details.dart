@@ -7,28 +7,29 @@ import '../components/separator.dart';
 import '../models/pedido.dart';
 
 class DetailsPage extends StatelessWidget {
-  final Pedido pedido;
+  final Map<String, dynamic> pedido;
   const DetailsPage({super.key, required this.pedido});
 
   @override
   Widget build(BuildContext context) {
     //
-    String bairro = pedido.enderecoEntrega.bairro;
-    String referencia = pedido.enderecoEntrega.referencia;
-    String complemento = pedido.enderecoEntrega.complemento;
+    String bairro = pedido['enderecoEntrega']['bairro'];
+    String referencia = pedido['enderecoEntrega']['referencia'];
+    String complemento = pedido['enderecoEntrega']['complemento'];
     String empty = 'Não informado';
-    String documento =
-        pedido.cliente.cnpj.isEmpty ? pedido.cliente.cpf : pedido.cliente.cnpj;
+    String documento = pedido['cliente']['cnpj'].isEmpty
+        ? pedido['cliente']['cpf']
+        : pedido['cliente']['cnpj'];
 
-    List<Item> itens = [];
-    itens = pedido.itens;
+    List itens = [];
+    itens = pedido['itens'];
 
-    List<Pagamento> pagamentos = [];
-    pagamentos = pedido.pagamento;
+    List pagamentos = [];
+    pagamentos = pedido['pagamento'];
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(pedido.cliente.nome),
+        title: Text(pedido['cliente']['nome']),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(
@@ -51,7 +52,7 @@ class DetailsPage extends StatelessWidget {
             Text(
               DateFormat("dd/MM/yyyy").format(
                 DateTime.parse(
-                  pedido.dataCriacao.toString(),
+                  pedido['dataCriacao'].toString(),
                 ),
               ),
             ),
@@ -61,7 +62,7 @@ class DetailsPage extends StatelessWidget {
             Text(
               DateFormat("dd/MM/yyyy").format(
                 DateTime.parse(
-                  pedido.dataAlteracao.toString(),
+                  pedido['dataAlteracao'].toString(),
                 ),
               ),
             ),
@@ -75,15 +76,15 @@ class DetailsPage extends StatelessWidget {
             //
 
             const DetailLabel(label: 'Endereço de entrega'),
-            Text(pedido.enderecoEntrega.endereco),
+            Text(pedido['enderecoEntrega']['endereco']),
             const SeparatorMain(),
             //
             const DetailLabel(label: 'Número'),
-            Text(pedido.enderecoEntrega.numero),
+            Text(pedido['enderecoEntrega']['numero']),
             const SeparatorMain(),
             //
             const DetailLabel(label: 'CEP'),
-            Text(pedido.enderecoEntrega.cep),
+            Text(pedido['enderecoEntrega']['cep']),
             const SeparatorMain(),
             //
             const DetailLabel(label: 'Bairro'),
@@ -91,11 +92,11 @@ class DetailsPage extends StatelessWidget {
             const SeparatorMain(),
             //
             const DetailLabel(label: 'Cidade'),
-            Text(pedido.enderecoEntrega.cidade),
+            Text(pedido['enderecoEntrega']['cidade']),
             const SeparatorMain(),
             //
             const DetailLabel(label: 'Estado'),
-            Text(pedido.enderecoEntrega.estado),
+            Text(pedido['enderecoEntrega']['estado']),
             const SeparatorMain(),
             //
             const DetailLabel(label: 'Complemento'),
@@ -113,7 +114,7 @@ class DetailsPage extends StatelessWidget {
 
             //
             const DetailLabel(label: 'Nome do cliente'),
-            Text(pedido.cliente.nome),
+            Text(pedido['cliente']['nome']),
             const SeparatorMain(),
             //
             const DetailLabel(label: 'Documento'),
@@ -125,14 +126,14 @@ class DetailsPage extends StatelessWidget {
             Text(
               DateFormat("dd/MM/yyyy").format(
                 DateTime.parse(
-                  pedido.cliente.dataNascimento.toString(),
+                  pedido['cliente']['dataNascimento'].toString(),
                 ),
               ),
             ),
             const SeparatorMain(),
             //
             const DetailLabel(label: 'Email'),
-            Text(pedido.cliente.email),
+            Text(pedido['cliente']['email']),
             const SeparatorMain(),
 
             //Items Section
@@ -149,17 +150,18 @@ class DetailsPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(
-                    pedido.itens[index].nome,
+                    pedido['itens'][index]['nome'],
                     style: const TextStyle(
                       fontSize: 14,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   subtitle: Text(
-                    '${pedido.itens[index].quantidade}x',
+                    '${pedido['itens'][index]['quantidade']}',
                     style: const TextStyle(fontSize: 16),
                   ),
-                  trailing: Text('R\$ ${pedido.itens[index].valorUnitario}'),
+                  trailing:
+                      Text('R\$ ${pedido['itens'][index]['valorUnitario']}'),
                 );
               },
             ),
@@ -180,17 +182,17 @@ class DetailsPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(
-                    pedido.pagamento[index].nome,
+                    pedido['pagamento'][index]['nome'],
                     style: const TextStyle(
                       fontSize: 14,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   subtitle: Text(
-                    'Parcela ${pedido.pagamento[index].parcela}',
+                    'Parcela ${pedido['pagamento'][index]['parcela']}',
                     style: const TextStyle(fontSize: 16),
                   ),
-                  trailing: Text('R\$ ${pedido.pagamento[index].valor}'),
+                  trailing: Text('R\$ ${pedido['pagamento'][index]['valor']}'),
                 );
               },
             ),
@@ -207,7 +209,7 @@ class DetailsPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('Desconto'),
-                        Text('R\$ ${pedido.desconto}'),
+                        Text('R\$ ${pedido['desconto']}'),
                       ]),
 
                   //
@@ -218,7 +220,7 @@ class DetailsPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('Frete'),
-                        Text('R\$ ${pedido.frete}'),
+                        Text('R\$ ${pedido['frete']}'),
                       ]),
 
                   //
@@ -229,7 +231,7 @@ class DetailsPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('Subtotal'),
-                        Text('R\$ ${pedido.subTotal}'),
+                        Text('R\$ ${pedido['subTotal']}'),
                       ]),
 
                   //
@@ -247,7 +249,7 @@ class DetailsPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('Total'),
-                        Text('R\$ ${pedido.valorTotal}'),
+                        Text('R\$ ${pedido['valorTotal']}'),
                       ]),
                 ],
               ),
