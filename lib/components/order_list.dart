@@ -1,3 +1,4 @@
+import 'package:app_pedidos/components/shimmer_screen.dart';
 import 'package:flutter/material.dart';
 import '../services/remote_service.dart';
 import '../views/details.dart';
@@ -14,7 +15,7 @@ class OrderList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Usuários"),
+        title: const Text("Pedidos"),
         centerTitle: true,
       ),
       body: FutureBuilder<dynamic>(
@@ -45,6 +46,10 @@ class OrderList extends StatelessWidget {
                     subtitle: Text(
                       pedido['enderecoEntrega']['endereco'],
                     ),
+                    trailing: Text(
+                      pedido['status'],
+                      style: const TextStyle(fontSize: 15),
+                    ),
                   );
                 },
               );
@@ -54,7 +59,7 @@ class OrderList extends StatelessWidget {
               );
             }
             return const Center(
-              child: CircularProgressIndicator(),
+              child: ShimmerPage(),
             );
           }),
     );

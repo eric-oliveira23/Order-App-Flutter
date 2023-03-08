@@ -1,4 +1,5 @@
 import 'package:app_pedidos/views/main_list.dart';
+import 'package:app_pedidos/views/no_connection.dart';
 import 'package:app_pedidos/views/search.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';

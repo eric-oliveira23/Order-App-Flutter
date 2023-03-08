@@ -1,8 +1,8 @@
-import 'package:app_pedidos/components/separator.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import '../services/remote_service.dart';
 import 'details.dart';
+
+// TODO: Empty list animation, layout/code improvements, shimmer effect, splash
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -30,6 +30,7 @@ class _SearchPageState extends State<SearchPage> {
               top: 40,
               left: 12,
               right: 12,
+              bottom: 6,
             ),
             child: TextField(
               onChanged: (value) => {

@@ -13,8 +13,6 @@ class ApiService {
     File file = File("${directory.path}/$dataCache");
 
     if (file.existsSync()) {
-      print("Reading from phone cache");
-
       //Lê os dados por cache
       final data = file.readAsStringSync();
       final List res = await json.decode(data);
